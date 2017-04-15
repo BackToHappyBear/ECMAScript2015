@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    /****************** class *******************/
+
+    // ES6 与 ES5 关于 构造函数的对比
+
+    // ES 5
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    Point.prototype.toString = function () {
+        return '(' + this.x + ', ' + this.y + ')';
+    };
+
+    var p = new Point(1, 2);
+
+    //ES6
+    class Point {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        toString() {
+            return '(' + this.x + ', ' + this.y + ')';
+        }
+
+        toValue() {
+        }
+    }
+
+    var p = new Point(1, 2);
+
+    // 可以这样理解，这个类 class 指的就是 原来的 prototype 原型，在里面通过 constructor 指向构造函数
+    // 而且 原型里的方法 直接 函数名 +（）定义，不需要 function
+    // 方法之间 不能使用 分隔符，会报错，直接回车 接着写即可
+    // 还需注意的是 和 let 类似 ， class 也不存在变量提升
+
+    /****************** extends *******************/
+
+    class Animal {
+        constructor(){
+            this.type = 'animal'
+        }
+        says(){
+            console.log(this.type + ' hello ')
+        }
+    }
+
+    let animal = new Animal();
+    animal.says('hello'); //animal says hello
+
+    class Cat extends Animal {
+        constructor(){
+            // 在构造函数中，super可以当作函数调用，代表父类的构造函数
+            // 类似于 Animal.prototype.constructor.call(this)
+            // 这里相当于 绑定了 Cat 的 this
+            super();
+            this.type = 'cat'
+        }
+        speak(){
+            // 在 自己 Cat 的原型中（我暂时这样认为），相当于对象调用
+            // 类似于 Animal.prototype.says()
+            super.says();
+        }
+    }
+
+    let cat = new Cat();
+    cat.says('hello'); //cat says hello
+
+    //  extends 即可让 Cat 继承 Animal 所有的属性和方法
+
+    //  super 是一个 关键字 而非 标识符
+    // 在 不同的语境 下有 不同的语义  具体如上例所示
+    //  而且 子类 如果想创建自己的 构造函数 就必须在 constructor 中调用 super 方法，不然得不到 this 对象
+
+
+    // 当然 这里 还分了一种 静态方法，对应 ES5 中 就相当于 构造函数本身的方法
+    // 如果是 静态方法，那么 super 指的就是 父类的构造函数，对应其静态方法
+    // 静态方法 可以理解为 自身的方法 ，
+    // 类似 jQuery $.each(), each 属于 $、jQuery 自身的方法，而非实例方法
+    class Parent {
+        static myMethod(msg) {
+            console.log('static', msg);
+        }
+
+        myMethod(msg) {
+            console.log('instance', msg);
+        }
+    }
+
+    class Child extends Parent {
+        static myMethod(msg) {
+            super.myMethod(msg);
+        }
+
+        myMethod(msg) {
+            super.myMethod(msg);
+        }
+    }
+
+    Child.myMethod(1); // static 1
+
+    var child = new Child();
+    child.myMethod(2); // instance 2
+
+
+</script>
+</body>
+</html>
