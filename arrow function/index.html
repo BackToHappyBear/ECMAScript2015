@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>箭头函数</title>
+</head>
+
+<body>
+    <script>
+        /****************** 箭头函数 *******************/
+
+        /********** ES5 与 ES6 写法对比 *********/
+
+        /**** ① ***/
+        // ES5
+        var f = function(v) {
+            return v;
+        }
+
+        // ES6
+        var f = v => v;
+        // 如果没参数、或多个参数 用 () 表示
+        var f = () => v;
+
+        /**** ② ***/
+        // ES5
+        function(x, y) {
+            x++;
+            y--;
+            return x + y;
+        }
+
+        // ES6
+        (x, y) => {
+            x++, y--;
+            return x + y
+        }
+        // 当然 单纯的这样写是匿名函数，没意义的
+        // 可以结合一些情景使用：
+        var total = values.reduce((a, b) => a + b, 0);
+
+        /********** this的指向 *********/
+        // 箭头函数里的 this 永远是固定的
+        // 利用这点，在一些情景下 就会方便很多，
+        // 不用 var that = this;或者 bind 了
+        function Timer() {
+            this.s1 = 0;
+            this.s2 = 0;
+
+            setInterval(() => this.s1++, 1000);
+
+            setInterval(function() {
+                this.s2++; // 这里的 this 指向的是 window
+            }, 1000);
+
+        }
+        var timer = new Timer();
+
+        setTimeout(() => console.log('s1: ', timer.s1), 3100);
+        setTimeout(() => console.log('s2: ', timer.s2), 3100);
+        // 上面的列子 前者 this指向 定义时的作用域，后者指向 运行时的作用域
+
+        class Animal {
+            constructor() {
+                this.type = 'animal'
+            }
+            says(say) {
+                setTimeout(() => {
+                    console.log(this.type + ' says ' + say)
+                }, 1000)
+            }
+        }
+        var animal = new Animal()
+        animal.says('hi') //animal says hi
+
+
+        /**
+         *  需要注意的是 
+         *  1、箭头函数里的是没有 自己的 this，它们的 this 指的都是最外层函数的this
+         *     所以也就无法使用 bind  call apply arguments(指的也是最外层的函数的 arguments) 
+         *  2、不可当作构造函数，即无法 new 出实例 会报错
+        /
+    </script>
+</body>
+
+</html>
