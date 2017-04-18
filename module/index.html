@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>module</title>
+</head>
+
+<body>
+    <script>
+        /****************** module语法 *******************/
+        /*
+        特点：
+            1、每个模块值加载一次，每个JS只执行一次，如果再次加载同目录下的同一个文件
+               会从内存中读取。
+            2、每个模块内声明的变量都是局部变量，不会污染全局作用域
+        */
+
+        // 导出方式 1：将变量包裹在一个对象导出(当然也可以在
+        //            声明变量前 加 export 直接导出，只是没
+        //            此方法直接明了)
+
+        // lib.js
+        let bar = 'stringBar';
+        let foo = 'stringFoo';
+        let fn = function() {
+            console.log('fn');
+        }
+        export {bar, foo, fn};
+
+        // main.js
+        import {
+            bar,
+            foo,
+            fn
+        } from './lib';
+        console.log(bar + '_' + foo + '_' + fn);
+
+        /************************************/
+        // 导出方式 2：修改导出接口的名字
+
+        // lib.js
+        let fn0 = () => {
+            console.log('fn0');
+        }
+        let obj0 = {};
+        export {fn0 as func, obj0 as bar}
+
+        // main.js
+        import {
+            func,
+            bar
+        } from './lib';
+        func();
+        console.log(bar);
+
+
+        /************************************/
+        // 导出方式 3：A引用B，B引用C，想让 A 使用 C 的数据
+        //         这里的 为毛 不直接让 A 引用 C。。。(感觉很鸡肋)
+
+        // lib.js
+        export * from './other'
+            // export {foo,fn} from "./other" 导出部分也可以
+
+        // other.js
+        export let foo = "stringFoo",
+            fn = () => {console.log('something')};
+
+        // main.js
+        import {
+            foo,
+            fn
+        } from "./lib";
+        console.log(foo);
+        console.log(fn());
+
+
+        /************************************/
+        // 导出方式 4：
+        // 此例是导出匿名的且默认输出 当然一个模块只有一个默认输出
+        export default "string"; // lib.js
+
+        import defaultString from "./lib" // main.js
+        console.log(defaultString);
+
+        // 导出匿名 默认函数
+        let fn = () => "string";
+        export {fn as default};
+
+        import defaultFn from "./lib";
+        console.log(defaultFn());
+
+        // 通过默认 default 输出接口，可以直接把 数据作为参数 .then
+        import('./myModule.js')
+            .then(({export1, export2}) => {
+                // ...
+            });
+
+        import('./myModule.js')
+            .then(myModule => {
+                console.log(myModule.default);
+            });
+
+
+
+        /****************** module执行 *******************/
+
+        // 回顾 seajs  导出分别 exports/module.exports 和 export(es6)
+
+        // index.html
+        seajs.use('./main.js',function(main){
+            console.log(0);
+        })
+
+        // main.js
+        define(function(require,exports,module){
+            var m1 = require('./module01.js');
+        }
+
+        // module01.js
+        define(function(require,exports,module){
+            console.log(1);
+            var m2 = require('./module02.js');
+            m2.showInfo();
+            console.log(3);
+        })
+        // module02.js
+        define(function(require,exports,module){
+            console.log(2);
+            exports.showInfo = function(){
+                console.log(module02);
+            }
+        })
+
+        // 输出结果依次为：1  2  module02  3  0
+        // seajs 的执行顺序 保证了执行顺序自上而下(除了seajs.use最后执行)
+        // 如果想异步执行的话，使用require.async('moduleName',function(module){})
+
+        // ES6 import 使用场景
+
+        // 1、按需加载
+            button.addEventListener('click',event=>{
+                import('./dialogBox.js')
+                    .then(dialogBox=>{
+                        dialogBox.open();
+                    })
+                    .catch(error=>{
+                        // something wrong
+                    })
+            });
+        // 2、条件加载
+            if(condition){
+                import('moduleA').then(...);
+            }else{
+                import('moduleB').then(...);
+            }
+
+        // 3、动态的模块路径() 根据fn()返回的结果加载不同的模块
+        import(f()).then(...);
+
+        /****************** module执行机制 *******************/
+        /**     es6       AMD/CMD
+         *   编译时加载 / 执行时加载
+         *   效率更高
+         */
+    </script>
+</body>
+
+</html>
