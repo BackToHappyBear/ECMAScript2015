@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>解构与默认值</title>
+</head>
+
+<script>
+    /****************** destructuring *******************/
+
+        // 直接上代码
+    let cat = 'miao';
+    let dog = 'wang';
+    let animal = {cat: cat, dog: dog};
+    console.log(animal); // Object {cat:'miao',dog:'wang'}
+
+
+    // ES6
+    let cat = 'miao';
+    let dog = 'wang';
+    let animal = {cat, dog};
+    // 反过来也可以  但是感觉很别扭啊
+    let animal = {cat: 'miao', dog: 'wang'};
+    let {cat, dog} = animal;
+    console.log(cat, dog);
+
+
+    // 数组同样适用
+    let [a, b, c] = [1, 2, 3];
+    //一些特例,当然还有一些比较奇葩的例子就不列举了，感觉自己也不会这么写
+
+    let [foo, [[bar], baz]] = [1, [[2], 3]];
+    // foo 1  bar 2  baz 3
+
+    let [, , third] = ['foo', 'bar', 'baz'];
+    // third 'baz'
+
+    /****************** default value *******************/
+
+        // 解构赋值指定的默认值 必须在其对应位置的值 === 全等于 undfined 才会生效
+
+    let [foo = true] = [];  // foo  true
+
+    let [x = 1] = [undefined];  // x  1
+
+    let [x = 1] = [null];  // x  null
+
+
+    // 解构赋值其他变量 必须在此变量声明前
+    let [x = 1, y = x] = [1, 2]; // x=1; y=2
+
+    let [x = y, y = 1] = [];     // ReferenceError
+    //  此例子 y还未声明 就被引用了
+
+    /************************* 用途 *********************/
+
+    // 1、交换变量的值
+    let x = 1;
+    let y = 2;
+    [x, y] = [y, x];
+
+    // (*^__^*) 如何不使用第三个变量交换 x，y的值 (这里的值不一定是number)
+    x = [x, y];
+    y = x[1];
+    x = x[0];
+
+    x = {x: x, y: y};
+    y = x.y;
+    x = x.x;
+
+    // 2、 接受函数返回的多个值   解构有些地方还是个人感觉还是很麻烦的,暂时不做深究
+    function example1() {
+        return [1, 2, 3];
+    }
+    let [a, b, c] = example();
+
+    function example2() {
+        return {foo: 1, bar: 2};
+    }
+    let {foo, bar} = example2();
+
+    // 3、 提取 JSON 数据  这个是我看来很便利的用处了
+    let data = {
+        id: 40,
+        status: 'ok',
+        arr: [1, 2]
+    };
+    let {id, status, arr} = data;
+    console.log(id, status, arr);  // 40 ok [1,2]
+
+    // 也可以这样写  这里 arr 只是匹配 number才是真正的赋值
+    let {id, status, arr: number} = data;
+    console.log(id, status, number);
+
+    // 4、 函数默认值
+
+    // 注意对比以下2个例子
+
+    function move({x = 0, y = 0} = {}) {
+        return [x, y];
+    }
+    move({x: 3, y: 8}); // [3, 8]
+    move({x: 3}); // [3, 0]
+    move({}); // [0, 0]
+    move(); // [0, 0]
+
+    // 对比下面
+    let [foo = true] = [];  // foo  true
+
+    /***************** 华丽的分割线 ************************/
+
+    function move({x, y} = {x: 0, y: 0}) {
+        return [x, y];
+    }
+    move({x: 3, y: 8}); // [3, 8]
+    move({x: 3}); // [3, undefined]
+    move({}); // [undefined, undefined]
+    move(); // [0, 0]
+
+    // 这种方式就类比 最上面的例子(让我感觉很别扭的)
+    // 相当于 给 x，y 赋值，类比如下
+    let animal = {cat: 'miao', dog: 'wang'};
+    let {cat, dog} = animal;
+    console.log(cat, dog);
+
+    // 上面代码是为函数move的参数指定默认值，而不是为变量x和y指定默认值，所以会得到与前一种写法不同的结果
+</script>
+<body>
+</body>
+
+</html>
