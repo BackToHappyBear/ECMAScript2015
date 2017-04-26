@@ -24,6 +24,7 @@
     };
 
     var p = new Point(1, 2);
+    //--------------------------------------------------
 
     //ES6
     class Point {
@@ -34,9 +35,6 @@
 
         toString() {
             return '(' + this.x + ', ' + this.y + ')';
-        }
-
-        toValue() {
         }
     }
 
@@ -50,10 +48,11 @@
     /****************** extends super*******************/
 
     class Animal {
-        constructor(){
+        constructor() {
             this.type = 'animal'
         }
-        says(){
+
+        says() {
             console.log(this.type + ' hello ')
         }
     }
@@ -62,14 +61,15 @@
     animal.says('hello'); //animal says hello
 
     class Cat extends Animal {
-        constructor(){
+        constructor() {
             // 在构造函数中，super可以当作函数调用，代表父类的构造函数
             // 类似于 Animal.prototype.constructor.call(this)
             // 这里相当于 绑定了 Cat 的 this
             super();
             this.type = 'cat'
         }
-        speak(){
+
+        speak() {
             // 在 自己 Cat 的原型中（我暂时这样认为），相当于对象调用
             // 类似于 Animal.prototype.says()
             super.says();
@@ -82,7 +82,7 @@
     //  extends 即可让 Cat 继承 Animal 所有的属性和方法
 
     //  super 是一个 关键字 而非 标识符
-    // 在 不同的语境 下有 不同的语义  具体如上例所示
+    //  在 不同的语境 下有 不同的语义  具体如上例所示
     //  而且 子类 如果想创建自己的 构造函数 就必须在 constructor 中调用 super 方法，不然得不到 this 对象
 
 
@@ -115,7 +115,61 @@
     var child = new Child();
     child.myMethod(2); // instance 2
 
+    //-------------------------  更好的例子  -----------------------------------------
+    function instance(){  // 忽略这个最外层这个函数，仅为了 识别、 展开收缩
 
+        class Perosn{
+            // 静态方法
+            static showInfo(){
+                console.log("Hello");
+            }
+
+            constructor(sex,weight){
+                this.sex = sex;
+                this.weight = weight;
+            }
+
+            showWeight(){
+                console.log('weight: ' + this.weight)
+            }
+
+            showSex(){
+                console.log('sex: ' + this.sex);
+            }
+        }
+
+        class Student extends Perosn{
+            constructor(sex, weight, score){
+                // 调用父类的构造函数，目的是为了获取this，下面实例 调用方法 showSex() 的时候是通过这里调用父类的构造函数方法
+                super(sex, weight);
+                this.score = score;
+            }
+
+            showScore(){
+                // 这里调用父类原型的方法 执行
+                super.showSex();
+                console.log("score: " + this.score);
+            }
+        }
+
+        let stu  = new Student('female', '75kg', '100');
+
+        stu.showWeight();
+        stu.showSex();
+        stu.showScore();
+        Student.showInfo(); // 静态方法必须通过类名来进行调用，不可以使用实例对象调用
+    }
+
+    /*********************    补充 继承机制         *****************************/
+
+    // 对于继承机制它肯定还是 根据之前的 三角关系，但需要注意的是，extends 的继承有两条线
+    // 举例   a A A.prototype  b B B.prototype
+    // class B extends class A{...} 那么
+    // B.__proto__ === A  通过此继承线  继承 构造函数A的属性
+    // B.prototype.__proto__ === A.prototype 通过此继承线  继承 A原型上的属性方法
+    // 但是 静态方法是如何实现继承的呢？？？
+
+=
 </script>
 </body>
 </html>

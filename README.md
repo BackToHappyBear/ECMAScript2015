@@ -25,3 +25,9 @@
  ### 5、destructuring
  + 解构、默认值语法
  + 使用场景
+ 
+ ### 6、template string, ...rest
+ + 语法
+ + 应用场景(很灵活)
+    - ...rest 作为函数参数
+    - 替代 apply

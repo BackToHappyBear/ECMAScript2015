@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -7,11 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>let,const</title>
 </head>
+
 <body>
 <script>
     /****************** let *******************/
 
-        // let 作用于 块级作用域，ES2015新增了块级作用域，即一对花括号{}，可以放弃自执行函数
+    // let 作用于 块级作用域，ES2015新增了块级作用域，即一对花括号{}，可以放弃自执行函数
     let name = 'Lee';
 
     while (true) {
@@ -31,14 +33,14 @@
             console.log(i);
         }
     }
-    a[6]();  // 6
+    a[6](); // 6
 
     /****************** const *******************/
 
-        // const 也是一种声明方式，但一旦声明，次值就无法被改变
+        // const 也是一种声明方式，但一旦声明，其值就无法被改变
 
     const PI = Math.PI;
-    PI = 23;  // Module build failed: SyntaxError: /es6/app.js: "PI" is read-only
+    PI = 23; // Module build failed: SyntaxError: /es6/app.js: "PI" is read-only
 
     // 应用场景：引入第三方库的时候，避免重命名
     const moment = require('moment');
@@ -49,13 +51,15 @@
      * 1、let、const 不存在变量提升，无法重复声明
      * 2、暂时性死区（即 let、const声明变量前 此变量是无法被声明或赋值的）
      */
-    // 3、如何获取块级作用域的值 (提案)
+    // 3、如何获取块级作用域的值 (提案)  (目前无法获得)
     let x = do {
         let t = f();
         t * t + 1;
     }
+
     // 4、const 本质是保证变量的引用地址无法被改动，例如其定义一个数组，const指向的数组地址无法被改动，但是可以push增加其值
     // 5、let、const 声明的变量 不在属于 window
 </script>
 </body>
+
 </html>
