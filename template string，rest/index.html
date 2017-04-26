@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板字符串，...rest</title>
+</head>
+<body>
+<script>
+    /******************   拼接字符串   **********************/
+    var str = `
+      There are <b>${basket.count}</b> items
+       in your basket, <em>${basket.onSale}</em>
+      are on sale!
+      `;
+    // 直接用 `` 把拼接的字符串连接起来，变量通过 ${} 包裹，还有一点要说的是
+    // 这样拼接字符串，是会保留其中的缩进，即保留你书写的样式
+
+    /******************  ...rest ******************************/
+
+    // ... 称作扩展运算符，主要是 用于分散的变量与数组之间的转换
+    console.log(...[1, 2, 3]);
+    // 1 2 3
+
+    console.log(1, ...[2, 3, 4], 5);
+    // 1 2 3 4 5
+
+    [...document.querySelectorAll('div')];
+    // [<div>, <div>, <div>]
+
+
+    function f(v, w, x, y, z) { }
+    var args = [0, 1];
+    f(-1, ...args, 2, ...[3]);
+    /*-------------------------------------------------*/
+
+
+    // rest 直译为 剩余的，它的作用是替代 arguments
+    function add(...values) {
+        let sum = 0;
+
+        for (var val of values) {
+            sum += val;
+        }
+        console.log(values);  // [2,5,3]
+        return sum;
+    }
+
+    add(2, 5, 3) // 10
+    // ...values 即代表 2,5,3   而 values 即 [2,5,3]
+    /*-------------------------------------------------*/
+
+
+    // 当然也可以组合使用，但是作为参数 ...items后面不能再跟参数了
+    function push(array, ...items) {
+        items.forEach(function(item) {
+            array.push(item);
+            console.log(item);
+        });
+    }
+
+    var a = [];
+    push(a, 1, 2, 3);
+    /*-------------------------------------------------*/
+
+
+    // 对比 arguments，此例时一个比较好的应用场景
+    // arguments变量的写法
+    function sortNumbers() {
+        return Array.prototype.slice.call(arguments).sort();
+    }
+
+    // rest参数的写法
+    const sortNumbers = (...numbers) => numbers.sort();
+    /*-------------------------------------------------*/
+
+    // 替代 apply
+    // ES5的写法
+    Math.max.apply(null, [14, 3, 77])
+
+    // ES6的写法
+    Math.max(...[14, 3, 77])
+
+    // 等同于
+    Math.max(14, 3, 77);
+
+
+
+</script>
+</body>
+</html>
