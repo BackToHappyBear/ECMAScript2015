@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Symbol</title>
+</head>
+<body>
+<script>
+    /*************************** Symbol *******************/
+    // Symbol 是一种继 String Number Boolean Null Undefined Object 之后的新的数据类型
+    // 书写格式
+    var mySymbol = Symbol();
+
+        // 第一种
+    var a = {};
+    a[mySymbol]='Hello';
+
+        // 第二种
+    var a = {
+        [mySymbol]:'Hello'
+    };
+
+        // 第三种
+    var a = {};
+    Object.defineProperty(a,mySymbol,{value:'Hello'});
+
+        // 结果相同
+    a[mySymbol]  // "Hello"
+
+        // 不能用点运算符 即 a.mySymbol 获取值
+
+
+    /******* 注意点 *******/
+        // 可以传递参数(字符串)，但是仅为了控制台或者转为字符串比较容易区分
+    var s1 = Symbol('foo');
+    var s2 = Symbol('bar');
+
+    s1 // Symbol(foo)
+    s2 // Symbol(bar)
+
+    s1.toString() // "Symbol(foo)"
+    s2.toString() // "Symbol(bar)"
+
+        // 传递参数相同，返回值也是不同的！！！
+        // 可以转为 字符串、布尔值，不能转为数值,并且不能与其他类型的值进行运算(比如字符串拼接)
+        // 如果传递的是一个object，那么会调用此对象的 toString 方法
+    const obj = {
+        toString(){
+            return 'abc';
+        }
+    };
+    const sym = Symbol(obj);
+    sym // Symbol(abc)
+
+    /****** Symbol.for() Symbol.keyFor() *****/
+        // Symbol.for 可以使用同一个Symbol值，因为单纯的通过Symbol创建的属性值都是不等的
+    var s1 = Symbol.for('foo');
+    var s2 = Symbol.for('foo');
+    s1 === s2 // true
+
+        // Symbol.keyFor 主要用于检测该 Symbol 是否存在
+        // 这里 通过 Symbol.for 相当于在全局登记一个 Symbol 类型的值
+        // 而单纯的通过 Symbol() 是不会登记的
+    var s1 = Symbol.for('foo');
+    Symbol.keyFor(s1); // "foo"
+
+    var s2 = Symbol("foo");
+    Symbol.keyFor(s2); // undefined
+
+    /****************** 作用：是防止属性名的冲突 ********************/
+    // 说了半天，那么 Symbol 到底可以应用于哪里
+    // 之前有封装 DOM缓动框架 或者 节流阀，要设置一个标志位
+    if (element.isMoving) {
+        smoothAnimations(element);
+    }
+    element.isMoving = true;
+    //这样也会有一些潜在的问题，事实上，你的代码很可能不是唯一一段操作DOM的代码。
+    //1、你创建的属性很可能影响到其它使用了for-in或Object.keys()的代码。
+    //2、一些聪明的库作者可能已经考虑并使用了这项技术，这样一来你的库就会与已有的库产生某些冲突
+    //3、当然，很可能你比他们更聪明，你先采用了这项技术，但是他们的库仍然无法与你的库默契配合。
+    //4、标准委员会可能决定为所有的元素增加一个.isMoving()方法，到那时你需要重写相关逻辑，必定会有深深的挫败感。
+
+    // 上面的东西感觉并没有什么明显的作用。。。。。。(感觉有点吹毛求疵)，不过 明天可以研究下 for-in 和 Object.keys()
+    // 但是可以用 Symbol 解决
+    // 创建一个独一无二的symbol
+    var isMoving = Symbol("isMoving");
+
+    if (element[isMoving]) {
+        smoothAnimations(element);
+    }
+    element[isMoving] = true;
+
+    // 最后还有一点注意的是 symbol 是弱封装机制：
+    // 模块创建了的几个 symbol，可以在任意对象上使用而不会产生冲突
+
+</script>
+</body>
+</html>
