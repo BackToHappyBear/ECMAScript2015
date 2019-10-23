@@ -39,6 +39,22 @@ console.log('script end')
 'async1 end'
 'setTimeout'
 
+// 修改为 Promise 格式
+// new Promise((resolve, reject) => {
+//   console.log("async1 start");
+//   console.log("async2");
+//   resolve(Promise.resolve());
+// }).then(() => {
+//   console.log("async1 end");
+// });
+// new Promise(function(resolve) {
+//   console.log("promise1");
+//   resolve();
+// }).then(function() {
+//   console.log("promise2");
+// });
+
+
 // 2
 fn = () => {
   return new Promise((resolve, reject) => {
