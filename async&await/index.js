@@ -139,7 +139,7 @@ async function test1() {
   }
 }
 
-// for-await-of 异步迭代，等待 Promise resove 并返回结果
+// for-await-of 异步迭代，等待 Promise resolve 并返回结果
 async  function test2() {
   for await (const obj of promises) {
     console.log(obj); 
@@ -148,6 +148,23 @@ async  function test2() {
 
 test1(); // promise, promise, promise
 test2(); // 1, 2, 3
+
+// sample
+function Gen(time) {
+  return new Promise((resolve, reject) => {
+    setTimeout(function() {
+      resolve(time)
+    }, time)
+  })
+}
+async function test() {
+  let arr = [Gen(2000), Gen(100), Gen(3000)]
+  for await (let item of arr) {
+    console.log(Date.now(), item)
+  }
+}
+test()
+
 
 // 不用太纠结顺序，因为你也搞不清楚
 new Promise((resolve, reject) => {
