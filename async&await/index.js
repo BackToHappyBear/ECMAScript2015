@@ -30,13 +30,15 @@ new Promise(function (resolve) {
 console.log('script end')
 
 // await 返回一个 promise resolve的结果
+// https://segmentfault.com/q/1010000016147496
+// NOTE: 最新结果
 'script start'
 'async1 start'
 'async2'
 'promise1'
 'script end'
+'async1 end' 
 'promise2'
-'async1 end'
 'setTimeout'
 
 // 修改为 Promise 格式
